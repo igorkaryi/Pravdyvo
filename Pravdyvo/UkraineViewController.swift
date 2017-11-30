@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  UkraineViewController.swift
 //  Pravdyvo
 //
 //  Created by Igor Karyi on 25.11.2017.
@@ -10,17 +10,16 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
+class UkraineViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
-class ViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
-    
     @IBOutlet weak var tableView: UITableView!
-
+    
     var nameTitle = [String]()
     var contentTitle = [String]()
     var imageTitle = [String]()
     
     var refreshControl: UIRefreshControl!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadNews()
@@ -35,9 +34,9 @@ class ViewController: BaseViewController, UITableViewDelegate, UITableViewDataSo
     @objc func refresh(sender:AnyObject) {
         loadNews()
     }
-    
+
     func loadNews() {
-        Alamofire.request("http://pravdyvo.com/?json=1", method: .get)
+        Alamofire.request("http://pravdyvo.com/archives/category/ukraine?json=1", method: .get)
             .validate(statusCode: 200..<300)
             .responseJSON { response in
                 if (response.result.error == nil) {
@@ -81,7 +80,7 @@ class ViewController: BaseViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! MyTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! UkraineCell
         cell.titleLabel?.text = nameTitle[indexPath.row]
         cell.contentLabel?.text = contentTitle[indexPath.row]
         cell.imageArt.downloadImage(from: (imageTitle[indexPath.item]))
@@ -91,7 +90,7 @@ class ViewController: BaseViewController, UITableViewDelegate, UITableViewDataSo
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowDetailAllNews" {
             let detailVC: DetailViewController? = segue.destination as? DetailViewController
-            let cell: MyTableViewCell? = sender as? MyTableViewCell
+            let cell: UkraineCell? = sender as? UkraineCell
             
             if cell != nil && detailVC != nil {
                 detailVC?.contentDescr = cell?.contentLabel!.text
